@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MultiCalculator</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <h1>MultiCalculator</h1>
+    
+    <h2>Currency Converter</h2>
+    <form id="currencyForm">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required><br><br>
+        
+        <label for="currency">Currency:</label>
+        <select id="currency" name="currency">
+            <option value="naira">Naira (NGN) to Dollars (USD)</option>
+            <option value="dollar">Dollars (USD) to Naira (NGN)</option>
+        </select><br><br>
+        
+        <input type="button" value="Convert Currency" onclick="convertCurrency()">
+    </form>
+    
+    <h2>Compound Interest Calculator</h2>
+    <form id="compoundInterestForm">
+        <label for="principal">Principal Amount:</label>
+        <input type="number" id="principalCI" name="principalCI" required><br><br>
+        
+        <label for="rateCI">Annual Interest Rate (%):</label>
+        <input type="number" id="rateCI" name="rateCI" required><br><br>
+        
+        <label for="timeCI">Time (years):</label>
+        <input type="number" id="timeCI" name="timeCI" required><br><br>
+        
+        <input type="button" value="Calculate Compound Interest" onclick="calculateCompoundInterest()">
+    </form>
+    
+    <h2>GPA Calculator</h2>
+    <form id="gpaForm">
+        <div id="courses">
+            <div class="course">
+                <label for="course1">Course 1:</label>
+                <input type="text" id="course1" name="course1" placeholder="Course Name" required>
+                <input type="number" id="unit1" name="unit1" placeholder="Unit Load" max="5" min="1" step="0.5" required>
+                <input type="number" id="grade1" name="grade1" placeholder="Grade" max="5" min="0" step="0.01" required>
+            </div>
+        </div>
+        <button type="button" onclick="addCourse()">Add Another Course</button><br><br>
+        <input type="button" value="Calculate GPA" onclick="calculateGPA()">
+    </form>
+    
+    <h2>Temperature Converter</h2>
+    <form id="temperatureForm">
+        <label for="temp">Temperature:</label>
+        <input type="number" id="temp" name="temp" required><br><br>
+        
+        <label for="tempScale">Scale:</label>
+        <select id="tempScale" name="tempScale">
+            <option value="celsius">Celsius (°C) to Fahrenheit (°F)</option>
+            <option value="fahrenheit">Fahrenheit (°F) to Celsius (°C)</option>
+        </select><br><br>
+        
+        <input type="button" value="Convert Temperature" onclick="convertTemperature()">
+    </form>
+    
+    <h2>Simple Interest Calculator</h2>
+    <form id="interestForm">
+        <label for="principal">Principal Amount:</label>
+        <input type="number" id="principalSI" name="principalSI" required><br><br>
+        
+        <label for="rateSI">Annual Interest Rate (%):</label>
+        <input type="number" id="rateSI" name="rateSI" required><br><br>
+        
+        <label for="timeSI">Time (years):</label>
+        <input type="number" id="timeSI" name="timeSI" required><br><br>
+        
+        <input type="button" value="Calculate Simple Interest" onclick="calculateSimpleInterest()">
+    </form>
+    
+    <div id="output"></div>
+    
+    <script>
+        let courseCount = 1;
+        
+        function addCourse() {
+            courseCount++;
+            const coursesDiv = document.getElementById('courses');
+            const newCourseDiv = document.createElement('div');
+            newCourseDiv.className = 'course';
+            newCourseDiv.innerHTML = `
+                <label for="course${courseCount}">Course ${courseCount}:</label>
+                <input type="text" id="course${courseCount}" name="course${courseCount}" placeholder="Course Name" required>
+                <input type="number" id="unit${courseCount}" name="unit${courseCount}" placeholder="Unit Load" max="5" min="1" step="0.5" required>
+                <input type="number" id="grade${courseCount}" name="grade${courseCount}" placeholder="Grade" max="5" min="0" step="0.01" required>
+            `;
+            coursesDiv.appendChild(newCourseDiv);
+        }
+        
+        function convertCurrency() {
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+            let convertedAmount;
+            
+            if (currency === 'naira') {
+                convertedAmount = amount / 410; 
+                document.getElementById('output').innerText = `${amount} Naira is approximately ${convertedAmount.toFixed(2)} Dollars.`;
+            } else if (currency === 'dollar') {
+                convertedAmount = amount * 410; 
+                document.getElementById('output').innerText = `${amount} Dollars is approximately ${convertedAmount.toFixed(2)} Naira.`;
+            }
+        }
+        
+        function calculateCompoundInterest() {
+            const principalCI = document.getElementById('principalCI').value;
+            const rateCI = document.getElementById('rateCI').value;
+            const timeCI = document.getElementById('timeCI').value;
+            
+            const compoundInterest = principalCI * (Math.pow(1 + (rateCI / 100), timeCI) - 1);
+            
+            document.getElementById('output').innerText = `Compound Interest: ${compoundInterest.toFixed(2)}`;
+        }
+        
+        function calculateGPA() {
+            const courseElements = document.querySelectorAll('.course');
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+            
+            courseElements.forEach(courseElement => {
+                const unit = parseFloat(courseElement.querySelector(`[id^=unit]`).value);
+                const grade = parseFloat(courseElement.querySelector(`[id^=grade]`).value);
+                
+                totalCredits += unit;
+                totalGradePoints += unit * grade;
+            });
+            
+            const gpa = totalGradePoints / totalCredits;
+            
+            document.getElementById('output').innerText = `GPA: ${gpa.toFixed(2)}`;
+        }
+        
+        function convertTemperature() {
+            const temp = document.getElementById('temp').value;
+            const tempScale = document.getElementById('tempScale').value;
+            let convertedTemp;
+            
+            if (tempScale === 'celsius') {
+                convertedTemp = (temp * 9/5) + 32;
+                document.getElementById('output').innerText = `${temp} Celsius is approximately ${convertedTemp.toFixed(2)} Fahrenheit.`;
+            } else if (tempScale === 'fahrenheit') {
+                convertedTemp = (temp - 32) * 5/9;
+                document.getElementById('output').innerText = `${temp} Fahrenheit is approximately ${convertedTemp.toFixed(2)} Celsius.`;
+            }
+        }
+        
+        function calculateSimpleInterest() {
+            const principalSI = document.getElementById('principalSI').value;
+            const rateSI = document.getElementById('rateSI').value;
+            const timeSI = document.getElementById('timeSI').value;
+            
+            const simpleInterest = (principalSI * rateSI * timeSI) / 100;
+            
+            document.getElementById('output').innerText = `Simple Interest: ${simpleInterest.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
